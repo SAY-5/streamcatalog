@@ -1,0 +1,5 @@
+/streamcatalog
+/bin/
+*.out
+*.test
+.env
