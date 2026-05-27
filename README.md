@@ -111,6 +111,25 @@ Testcontainers, so it requires a working Docker environment. On a local colima
 setup you may need to disable Ryuk (`TESTCONTAINERS_RYUK_DISABLED=true`) and
 point `DOCKER_HOST` at the colima socket; CI is unaffected.
 
+## Benchmarks
+
+The lineage traversal is the heaviest pure-compute path: a `GET /lineage` call
+loads the edges and walks the graph transitively. The benchmark builds a chain
+of 2000 streams that each fan out to two consumers (about 6000 edges) and
+traverses downstream from the head.
+
+Measured on an Apple M2 Pro (`go test -bench`):
+
+```
+BenchmarkDownstreamTraversal-10    ~2.1 ms/op    1006291 B/op    103 allocs/op
+BenchmarkBuildAndTraverse-10       ~4.3 ms/op    3708448 B/op    16176 allocs/op
+```
+
+CI runs `scripts/bench_regress.sh`, a smoke gate that fails if the traversal is
+more than 30 percent slower than the committed baseline in `bench/baseline.txt`.
+The baseline is calibrated on the CI runner, which is slower than the figures
+above.
+
 ## How this differs
 
 streamcatalog is a stream metadata catalog and governance layer: schema, owner,

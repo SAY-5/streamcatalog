@@ -1,0 +1,5 @@
+# Baseline ns/op for the lineage traversal benchmark, measured on a GitHub
+# ubuntu-latest runner. The bench-regress gate fails if a run is more than 30%
+# slower than this value. Update this file when an intentional change moves the
+# number.
+BenchmarkDownstreamTraversal 6500000
